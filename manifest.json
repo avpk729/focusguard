@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "FocusGuard",
+  "version": "1.4.0",
+  "description": "Block distracting sites during study hours. Optional timed detox lock.",
+  "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "*://*.twitter.com/*",
+    "*://*.x.com/*",
+    "*://*.instagram.com/*",
+    "*://*.reddit.com/*",
+    "*://*.youtube.com/*",
+    "*://*.facebook.com/*",
+    "*://*.tiktok.com/*",
+    "*://*.snapchat.com/*",
+    "*://*.twitch.tv/*",
+    "*://*.pinterest.com/*",
+    "*://*.linkedin.com/*",
+    "*://*.tumblr.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.twitter.com/*",
+        "*://*.x.com/*",
+        "*://*.instagram.com/*",
+        "*://*.reddit.com/*",
+        "*://*.youtube.com/*",
+        "*://*.facebook.com/*",
+        "*://*.tiktok.com/*",
+        "*://*.snapchat.com/*",
+        "*://*.twitch.tv/*",
+        "*://*.pinterest.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.tumblr.com/*"
+      ],
+      "js": ["shared.js", "content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

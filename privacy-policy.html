@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FocusGuard Privacy Policy</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --text: #e8eef6;
+      --muted: #9aa8b8;
+      --accent: #3d9cf0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #1e3a5f 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+    h1 { font-size: 2rem; margin: 0 0 0.25rem; letter-spacing: -0.02em; }
+    .meta { color: var(--muted); margin-bottom: 2rem; }
+    h2 { font-size: 1.15rem; margin-top: 2rem; color: var(--accent); }
+    p, li { color: #d5dee8; }
+    a { color: var(--accent); }
+    .panel {
+      background: color-mix(in srgb, var(--card) 88%, transparent);
+      border: 1px solid #2a3a4f;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>FocusGuard Privacy Policy</h1>
+    <p class="meta">Last updated: August 22, 2026</p>
+
+    <div class="panel">
+      <p><strong>FocusGuard</strong> (“the Extension”) helps you block distracting websites during scheduled focus hours. This policy explains what data the Extension handles.</p>
+    </div>
+
+    <h2>Data we collect</h2>
+    <p>FocusGuard does <strong>not</strong> collect, sell, or share personal information. There is no account system and no analytics backend operated by us.</p>
+
+    <h2>Data stored on your device</h2>
+    <p>The Extension uses Chrome’s local storage APIs to keep settings on your device only, such as:</p>
+    <ul>
+      <li>Whether blocking is enabled</li>
+      <li>Which sites you chose to block</li>
+      <li>Schedule times and days</li>
+      <li>An optional password you set to lock settings changes</li>
+      <li>An optional timed-detox end time, if you start a 1-day, 5-day, or 7-day lock</li>
+    </ul>
+    <p>This data never leaves your browser unless you sync it yourself through your Google account’s Chrome sync (if enabled). We do not receive a copy.</p>
+
+    <h2>Permissions</h2>
+    <ul>
+      <li><strong>storage</strong> — save your preferences locally</li>
+      <li><strong>alarms</strong> — apply schedule start/end times</li>
+      <li><strong>declarativeNetRequest</strong> (and host access) — block requests to sites you selected</li>
+      <li><strong>Host permissions</strong> — only for the social/entertainment sites listed in the Extension so blocking and the interstitial page can work</li>
+    </ul>
+
+    <h2>Third parties</h2>
+    <p>The Extension does not send data to third-party servers. Blocked sites are not contacted when a rule redirects you to the Extension’s blocked page.</p>
+
+    <h2>Children</h2>
+    <p>FocusGuard is a productivity tool and is not directed at children under 13. It does not knowingly collect children’s personal information.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes, we will update the “Last updated” date on this page.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about privacy: open an issue on the <a href="https://github.com/avpk729/focusguard">FocusGuard GitHub repository</a>.</p>
+  </main>
+</body>
+</html>

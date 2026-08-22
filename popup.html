@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FocusGuard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --accent: #c8f03c;
+    --accent-dim: #8aaa20;
+    --danger: #ff4545;
+    --text: #f0f0f0;
+    --muted: #666;
+    --radius: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 340px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    padding-bottom: 8px;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .logo-text {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .status-pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 100px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+  }
+  .status-pill.active {
+    background: var(--accent);
+    color: #0d0d0d;
+  }
+  .status-pill.inactive {
+    background: var(--border);
+    color: var(--muted);
+  }
+
+  /* MAIN TOGGLE */
+  .main-toggle-area {
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .toggle-label {
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .toggle-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* TOGGLE SWITCH */
+  .toggle-switch {
+    position: relative;
+    width: 48px; height: 26px;
+  }
+  .toggle-switch input { display: none; }
+  .slider {
+    position: absolute; inset: 0;
+    background: var(--border);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .slider::before {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    left: 3px; top: 3px;
+    background: var(--muted);
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .toggle-switch input:checked + .slider { background: var(--accent); }
+  .toggle-switch input:checked + .slider::before {
+    transform: translateX(22px);
+    background: #0d0d0d;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SITE GRID */
+  .site-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .site-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    user-select: none;
+  }
+  .site-chip:hover { border-color: var(--accent-dim); }
+  .site-chip.blocked {
+    background: rgba(200, 240, 60, 0.08);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .site-chip .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .site-chip.blocked .dot { background: var(--accent); }
+
+  /* SCHEDULE */
+  .schedule-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .time-inputs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .time-inputs span {
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+  input[type="time"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    flex: 1;
+  }
+  input[type="time"]:focus { border-color: var(--accent); }
+
+  .days-row {
+    display: flex;
+    gap: 4px;
+  }
+  .day-btn {
+    width: 32px; height: 28px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 700;
+  }
+  .day-btn.active {
+    background: rgba(200, 240, 60, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* PASSWORD */
+  .pw-row {
+    display: flex;
+    gap: 8px;
+  }
+  input[type="password"], input[type="text"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    flex: 1;
+    min-width: 0;
+  }
+  input[type="password"]:focus, input[type="text"]:focus { border-color: var(--accent); }
+  ::placeholder { color: var(--muted); }
+
+  .btn {
+    background: var(--border);
+    color: var(--text);
+    border: none;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: #333; }
+  .btn.accent { background: var(--accent); color: #0d0d0d; }
+  .btn.accent:hover { background: var(--accent-dim); }
+  .btn.danger { background: rgba(255,69,69,0.15); color: var(--danger); }
+  .btn.danger:hover { background: rgba(255,69,69,0.25); }
+
+  .pw-hint {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-top: 6px;
+  }
+
+  .section-copy {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+
+  .detox-row {
+    display: flex;
+    gap: 6px;
+  }
+  .detox-btn {
+    flex: 1;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 700;
+  }
+  .detox-btn:hover { border-color: var(--accent-dim); }
+  .detox-btn.active {
+    background: rgba(200, 240, 60, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  input:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .lock-timer {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .timer-label {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .timer-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.4px;
+  }
+  .timer-until {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-top: 6px;
+  }
+
+  .warn-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+  .warn-actions .btn { flex: 1; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--accent);
+    color: #0d0d0d;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* LOCK OVERLAY */
+  .lock-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+  }
+  .lock-overlay.show { display: flex; }
+  .lock-overlay p {
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    text-align: center;
+  }
+  .lock-overlay h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .lock-icon { font-size: 32px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🛡</div>
+    <div class="logo-text">FocusGuard</div>
+  </div>
+  <div class="status-pill inactive" id="statusPill">INACTIVE</div>
+</div>
+
+<div class="main-toggle-area">
+  <div>
+    <div class="toggle-label">Blocking</div>
+    <div class="toggle-sub" id="toggleSub">Click to start blocking</div>
+  </div>
+  <label class="toggle-switch">
+    <input type="checkbox" id="masterToggle">
+    <span class="slider"></span>
+  </label>
+</div>
+
+<div class="section">
+  <div class="section-title">Sites to Block</div>
+  <div class="site-grid" id="siteGrid"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Study Schedule</div>
+  <div class="schedule-row">
+    <span style="font-size:13px;font-weight:700">Auto-schedule</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="scheduleToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div id="scheduleOptions">
+    <div class="time-inputs">
+      <input type="time" id="startTime" value="09:00">
+      <span>→</span>
+      <input type="time" id="endTime" value="17:00">
+    </div>
+    <div class="days-row" id="daysRow"></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Timed Detox</div>
+  <p class="section-copy">Do you want a 1-day, 5-day, or 7-day detox? If you start a detox, you cannot unlock FocusGuard until the time is complete.</p>
+  <div class="detox-row" id="detoxRow"></div>
+  <div class="pw-hint" id="detoxHint">Select a length, then enter a password and press OK.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Password Lock</div>
+  <div class="pw-row">
+    <input type="password" id="pwInput" placeholder="Set a password…">
+    <button class="btn accent" id="pwSaveBtn">OK</button>
+    <button class="btn danger" id="pwClearBtn">Clear</button>
+  </div>
+  <div class="pw-hint" id="pwHint">No password set — changes are unprotected</div>
+</div>
+
+<!-- Warning before a timed detox starts -->
+<div class="lock-overlay" id="warnOverlay">
+  <div class="lock-icon">⚠</div>
+  <h3>Start this detox?</h3>
+  <p id="warnText">You cannot unlock FocusGuard until the time is complete. You cannot cancel this lock.</p>
+  <div class="warn-actions">
+    <button class="btn" id="warnCancelBtn">Cancel</button>
+    <button class="btn danger" id="warnConfirmBtn">I understand — lock it</button>
+  </div>
+</div>
+
+<!-- Lock overlay for password prompt -->
+<div class="lock-overlay" id="lockOverlay">
+  <div class="lock-icon">🔒</div>
+  <h3>FocusGuard is locked</h3>
+  <p id="lockSub">Enter password to modify settings</p>
+  <div class="lock-timer" id="lockTimer" hidden>
+    <div class="timer-label">Unlock available in</div>
+    <div class="timer-value" id="timerValue">—</div>
+    <div class="timer-until" id="timerUntil"></div>
+  </div>
+  <div style="display:flex;gap:8px;width:100%">
+    <input type="password" id="unlockInput" placeholder="Password…" style="flex:1">
+    <button class="btn accent" id="unlockBtn">Unlock</button>
+  </div>
+  <p id="unlockError" style="color:#ff4545;display:none">Wrong password!</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="shared.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
