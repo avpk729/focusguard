@@ -11,6 +11,7 @@ desktop.ini
 
 # Build / packaging artifacts
 *.zip
+!focusguard-1.4.0.zip
 dist/
 store-assets/*.png
 !store-assets/.gitkeep
